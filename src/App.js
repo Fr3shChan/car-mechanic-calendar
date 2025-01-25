@@ -100,6 +100,9 @@ const App = () => {
                 <p><strong>Marka samochodu:</strong> {note.carBrand}</p>
                 <p><strong>Model samochodu:</strong> {note.carModel}</p>
                 <p><strong>Notatka:</strong> {note.note}</p>
+                {note.image && (
+                  <p><strong>Zdjęcie:</strong> <img src={note.image} alt="Załączone zdjęcie" style={{ maxWidth: '300px', display: 'block', marginTop: '10px' }} /></p>
+                )}
                 <button onClick={() => {
                   const newNoteContent = prompt('Edytuj notatkę:', note.note);
                   if (newNoteContent !== null) handleEditNote(index, newNoteContent);
@@ -131,6 +134,9 @@ const App = () => {
               <p><strong>Marka samochodu:</strong> {note.carBrand}</p>
               <p><strong>Model samochodu:</strong> {note.carModel}</p>
               <p><strong>Notatka:</strong> {note.note}</p>
+              {note.image && (
+                <p><strong>Zdjęcie:</strong> <img src={note.image} alt="Załączone zdjęcie" style={{ maxWidth: '300px', display: 'block', marginTop: '10px' }} /></p>
+              )}
             </li>
           ))
         )}
@@ -169,16 +175,19 @@ const NoteInput = ({ onAddNote }) => {
   const [carBrand, setCarBrand] = useState('');
   const [carModel, setCarModel] = useState('');
   const [note, setNote] = useState('');
+  const [image, setImage] = useState(null);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (name.trim() && contact.trim() && carBrand.trim() && carModel.trim() && note.trim()) {
-      onAddNote({ name, contact, carBrand, carModel, note });
+      const imageUrl = image ? URL.createObjectURL(image) : null;
+      onAddNote({ name, contact, carBrand, carModel, note, image: imageUrl });
       setName('');
       setContact('');
       setCarBrand('');
       setCarModel('');
       setNote('');
+      setImage(null);
     }
   };
 
@@ -217,6 +226,11 @@ const NoteInput = ({ onAddNote }) => {
         onChange={(e) => setNote(e.target.value)}
         placeholder="Dodaj notatkę lub klienta..."
         required
+      />
+      <input
+        type="file"
+        accept="image/*"
+        onChange={(e) => setImage(e.target.files[0])}
       />
       <button type="submit">Dodaj</button>
     </form>
